@@ -62,3 +62,23 @@ def choose_unique_from_range(numbers_range: List[int], required_selections: int)
     assert len(selected_choices) == required_selections, f"You've selected {selected_choices} options. Please choose {required_selections}"
 
     return selected_choices
+
+
+def choose_by_yourself() -> List[int]:
+    """
+    Multiple selection from given list of choices adjusted for lottery.
+    To make a choose use 'space' and 'enter' keys on your keyboard.
+    With 'space' key, choices are selected(unselected).
+    With 'enter' key, choices are confirmed.
+
+    Returns
+    -------
+    List[int]
+        List of chosen numbers
+    """
+    chosen_numbers_1_to_50 = choose_unique_from_range(pool_of_numbers_1_to_50, 5)
+    chosen_numbers_1_to_12 = choose_unique_from_range(pool_of_numbers_1_to_12, 2)
+
+    all_chosen_numbers = chosen_numbers_1_to_50 + chosen_numbers_1_to_12
+
+    return all_chosen_numbers
