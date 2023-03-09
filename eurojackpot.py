@@ -1,12 +1,39 @@
 """Module simulates eurojackpot lottery
 """
 import random
-from typing import List
+from typing import List, Dict
 import inquirer
 
 # numbers available during eurojackpot lottery
 pool_of_numbers_1_to_50 = list(range(1,51))
 pool_of_numbers_1_to_12 = list(range(1,13))
+
+
+def generate_pool(last_number: int, selections: int) -> Dict:
+    """
+    Generates dictionary with 2 information:
+        - range of available numbers
+        - number of selections
+
+    Parameters
+    ----------
+    last_number : int
+        The highest value from the pool
+    selections : int
+        How many numbers should be selected
+
+    Returns
+    -------
+    Dict
+        pool: List[int] - list of available numbers
+        selections: int - number of selections
+    """
+    assert last_number >= 1, "You cannot create a pool with zero or negative numbers. Enter a positive value."
+    assert last_number >= selections, f"You cannot select {selections} numbers from {last_number} numbers pool."
+
+    pool = dict(pool = list(range(1, last_number + 1)), selections = selections)
+
+    return pool
 
 
 def choose_unique_from_range(numbers_range: List[int], required_selections: int) -> List[int]:
