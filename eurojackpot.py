@@ -82,3 +82,39 @@ def choose_by_yourself() -> List[int]:
     all_chosen_numbers = chosen_numbers_1_to_50 + chosen_numbers_1_to_12
 
     return all_chosen_numbers
+
+
+def choose_numbers(randomly: bool = True) -> List[int]:
+    """
+    Selection of numbers participating in the lottery.
+
+    There are 2 pools of numbers and from each, unique numbers are selected.
+    Numbers can duplicate, but not within a single pool.
+
+    Pool 1: numbers from 1 to 50
+    Pool 2: numbers from 1 to 12
+
+    Parameters
+    ----------
+    randomly : bool, optional
+        If set to True (default), then numbers are selected by random method.
+        If set to False, numbers are selected by the user:
+            - multiple selection from the list of given choices.
+            - with 'space' key on keyboard, choices are selected(unselected).
+            - with 'enter' key on keyboard, choices are confirmed.
+
+    Returns
+    -------
+    List[int]
+        List of chosen numbers
+    """
+    if randomly:
+        chosen_numbers_pool_1 = random.sample(pool_of_numbers_1_to_50, k=5)
+        chosen_numbers_pool_2 = random.sample(pool_of_numbers_1_to_12, k=2)
+    else:
+        chosen_numbers_pool_1 = choose_unique_from_range(pool_of_numbers_1_to_50, 5)
+        chosen_numbers_pool_2 = choose_unique_from_range(pool_of_numbers_1_to_12, 2)
+
+    all_chosen_numbers = chosen_numbers_pool_1 + chosen_numbers_pool_2
+
+    return all_chosen_numbers
