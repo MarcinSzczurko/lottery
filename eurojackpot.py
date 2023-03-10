@@ -1,12 +1,9 @@
 """Module simulates eurojackpot lottery
 """
 import random
-from typing import List, Dict
-import inquirer
+from typing import Dict, List
 
-# numbers available during eurojackpot lottery
-pool_of_numbers_1_to_50 = list(range(1,51))
-pool_of_numbers_1_to_12 = list(range(1,13))
+import inquirer
 
 
 def generate_pool(last_number: int, selections: int) -> Dict:
@@ -28,10 +25,14 @@ def generate_pool(last_number: int, selections: int) -> Dict:
         pool: List[int] - list of available numbers
         selections: int - number of selections
     """
-    assert last_number >= 1, "You cannot create a pool with zero or negative numbers. Enter a positive value."
-    assert last_number >= selections, f"You cannot select {selections} numbers from {last_number} numbers pool."
+    assert (
+        last_number >= 1
+    ), "You cannot create a pool with zero or negative numbers. Enter a positive value."
+    assert (
+        last_number >= selections
+    ), f"You cannot select {selections} numbers from {last_number} numbers pool."
 
-    pool = dict(pool = list(range(1, last_number + 1)), selections = selections)
+    pool = dict(pool=list(range(1, last_number + 1)), selections=selections)
 
     return pool
 
@@ -51,7 +52,7 @@ def choose_random(pool: Dict) -> Dict:
     Dict
         Pool dictionary extended with drawn numbers
     """
-    pool['chosen_numbers'] = random.sample(pool['pool'], pool['selections'])
+    pool["chosen_numbers"] = random.sample(pool["pool"], pool["selections"])
 
     return pool
 
@@ -80,16 +81,18 @@ def choose_by_yourself(pool: Dict) -> Dict:
     message = f"Choose {pool['selections']} numbers from the range below. Press space to select/unselect values. Press enter to confirm choices."
 
     questions = [
-    inquirer.Checkbox(name=name,
-                      message=message,
-                      choices=pool['pool'],
-                    ),
+        inquirer.Checkbox(
+            name=name,
+            message=message,
+            choices=pool["pool"],
+        ),
     ]
     answers = inquirer.prompt(questions)
-    pool['chosen_numbers'] = answers[name]
+    pool["chosen_numbers"] = answers[name]
 
-    assert len(pool['chosen_numbers']) == pool['selections'], \
-        f"You've selected {len(pool['chosen_numbers'])} options. Please choose {pool['selections']}"
+    assert (
+        len(pool["chosen_numbers"]) == pool["selections"]
+    ), f"You've selected {len(pool['chosen_numbers'])} options. Please choose {pool['selections']}"
 
     return pool
 
@@ -129,25 +132,27 @@ def choose_numbers(pool_1: Dict, pool_2: Dict, method: str = "random") -> List[i
         pool_1 = choose_by_yourself(pool_1)
         pool_2 = choose_by_yourself(pool_2)
 
-    all_chosen_numbers = pool_1['chosen_numbers'] + pool_2['chosen_numbers']
+    all_chosen_numbers = pool_1["chosen_numbers"] + pool_2["chosen_numbers"]
 
     questions = [
-    inquirer.List(name="satisfaction",
-                  message=f"These are your numbers {all_chosen_numbers}. Are you satisfied with them?",
-                  choices=['Yes', 'No'],
-                ),
+        inquirer.List(
+            name="satisfaction",
+            message=f"These are your numbers {all_chosen_numbers}. Are you satisfied with them?",
+            choices=["Yes", "No"],
+        ),
     ]
     answers = inquirer.prompt(questions)
 
-    if answers['satisfaction'] == "No":
+    if answers["satisfaction"] == "No":
         questions = [
-        inquirer.List(name="draw again",
-                      message="Choose your numbers again. Which method do you want to play?",
-                      choices=["random", "own numbers"],
-                    ),
+            inquirer.List(
+                name="draw again",
+                message="Choose your numbers again. Which method do you want to play?",
+                choices=["random", "own numbers"],
+            ),
         ]
         answers = inquirer.prompt(questions)
 
-        choose_numbers(pool_1, pool_2, method=answers['draw again'])
+        choose_numbers(pool_1, pool_2, method=answers["draw again"])
 
     return all_chosen_numbers
