@@ -156,3 +156,9 @@ def choose_numbers(pool_1: Dict, pool_2: Dict, method: str = "random") -> List[i
         choose_numbers(pool_1, pool_2, method=answers["draw again"])
 
     return all_chosen_numbers
+
+
+if __name__ == "__main__":
+    pool_1 = generate_pool(50, 5)
+    pool_2 = generate_pool(12, 2)
+    choose_numbers(pool_1, pool_2)
