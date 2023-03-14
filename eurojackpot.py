@@ -97,7 +97,7 @@ def choose_by_yourself(pool: Dict) -> Dict:
     return pool
 
 
-def choose_numbers(pool_1: Dict, pool_2: Dict, method: str = "random") -> List[Dict]:
+def choose_numbers(pool_1: Dict, pool_2: Dict, method: str = "random", machine: bool = False) -> List[Dict]:
     """
     Selection of numbers participating in the lottery.
 
@@ -129,33 +129,37 @@ def choose_numbers(pool_1: Dict, pool_2: Dict, method: str = "random") -> List[D
             selections: int - number of selections
             chosen_numbers: List[int] - numbers participating in the lottery
     """
-    if method == "random":
-        pool_1 = choose_random(pool_1)
-        pool_2 = choose_random(pool_2)
-    elif method == "own numbers":
-        pool_1 = choose_by_yourself(pool_1)
-        pool_2 = choose_by_yourself(pool_2)
+    if not machine:
+        if method == "random":
+            pool_1 = choose_random(pool_1)
+            pool_2 = choose_random(pool_2)
+        elif method == "own numbers":
+            pool_1 = choose_by_yourself(pool_1)
+            pool_2 = choose_by_yourself(pool_2)
 
-    questions = [
-        inquirer.List(
-            name="satisfaction",
-            message=f"These are your numbers {pool_1['chosen_numbers']}{pool_2['chosen_numbers']}. Are you satisfied with them?",
-            choices=["Yes", "No"],
-        ),
-    ]
-    answers = inquirer.prompt(questions)
-
-    if answers["satisfaction"] == "No":
         questions = [
             inquirer.List(
-                name="draw again",
-                message="Choose your numbers again. Which method do you want to play?",
-                choices=["random", "own numbers"],
+                name="satisfaction",
+                message=f"These are your numbers {pool_1['chosen_numbers']}{pool_2['chosen_numbers']}. Are you satisfied with them?",
+                choices=["Yes", "No"],
             ),
         ]
         answers = inquirer.prompt(questions)
 
-        choose_numbers(pool_1, pool_2, method=answers["draw again"])
+        if answers["satisfaction"] == "No":
+            questions = [
+                inquirer.List(
+                    name="draw again",
+                    message="Choose your numbers again. Which method do you want to play?",
+                    choices=["random", "own numbers"],
+                ),
+            ]
+            answers = inquirer.prompt(questions)
+
+            choose_numbers(pool_1, pool_2, method=answers["draw again"])
+    else:
+        pool_1 = choose_random(pool_1)
+        pool_2 = choose_random(pool_2)
 
     all_chosen_numbers = [pool_1, pool_2]
 
