@@ -97,7 +97,7 @@ def choose_by_yourself(pool: Dict) -> Dict:
     return pool
 
 
-def choose_numbers(pool_1: Dict, pool_2: Dict, method: str = "random") -> List[int]:
+def choose_numbers(pool_1: Dict, pool_2: Dict, method: str = "random") -> List[Dict]:
     """
     Selection of numbers participating in the lottery.
 
@@ -122,8 +122,12 @@ def choose_numbers(pool_1: Dict, pool_2: Dict, method: str = "random") -> List[i
 
     Returns
     -------
-    List[int]
-        List of numbers participating in the lottery
+    List[Dict, Dict]
+        List of dictionaries participating in the lottery.
+        Dictionaries store information about:
+            pool: List[int] - list of available numbers in the pool
+            selections: int - number of selections
+            chosen_numbers: List[int] - numbers participating in the lottery
     """
     if method == "random":
         pool_1 = choose_random(pool_1)
@@ -132,12 +136,10 @@ def choose_numbers(pool_1: Dict, pool_2: Dict, method: str = "random") -> List[i
         pool_1 = choose_by_yourself(pool_1)
         pool_2 = choose_by_yourself(pool_2)
 
-    all_chosen_numbers = pool_1["chosen_numbers"] + pool_2["chosen_numbers"]
-
     questions = [
         inquirer.List(
             name="satisfaction",
-            message=f"These are your numbers {all_chosen_numbers}. Are you satisfied with them?",
+            message=f"These are your numbers {pool_1['chosen_numbers']}{pool_2['chosen_numbers']}. Are you satisfied with them?",
             choices=["Yes", "No"],
         ),
     ]
@@ -154,6 +156,8 @@ def choose_numbers(pool_1: Dict, pool_2: Dict, method: str = "random") -> List[i
         answers = inquirer.prompt(questions)
 
         choose_numbers(pool_1, pool_2, method=answers["draw again"])
+
+    all_chosen_numbers = [pool_1, pool_2]
 
     return all_chosen_numbers
 
