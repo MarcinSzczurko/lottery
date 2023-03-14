@@ -170,3 +170,4 @@ if __name__ == "__main__":
     pool_1 = generate_pool(50, 5)
     pool_2 = generate_pool(12, 2)
     choose_numbers(pool_1, pool_2)
+    choose_numbers(pool_1, pool_2, machine=True)
